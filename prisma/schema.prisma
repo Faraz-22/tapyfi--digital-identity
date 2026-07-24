@@ -1,0 +1,337 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  OWNER
+}
+
+enum ThemeMode {
+  MIDNIGHT
+  CHAMPAGNE
+  DAYLIGHT
+}
+
+enum ProfileLayout {
+  HALO
+  EDITORIAL
+  STACK
+}
+
+enum AnalyticsEventType {
+  NFC_TAP
+  QR_SCAN
+  LINK_CLICK
+  PROFILE_VIEW
+  CONTACT_SAVE
+  SHARE
+}
+
+enum OrderStatus {
+  DRAFT
+  PAID
+  IN_PRODUCTION
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum ProductType {
+  PVC_CARD
+  MATTE_CARD
+  METAL_CARD
+  WOOD_CARD
+  KEYCHAIN
+  DESK_PLATE
+  STICKER
+  BAND
+}
+
+model User {
+  id           String       @id @default(cuid())
+  email        String       @unique
+  passwordHash String?
+  name         String
+  role         UserRole     @default(USER)
+  profiles     Profile[]
+  teamMembers  TeamMember[]
+  orders       Order[]
+  addresses    Address[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model Team {
+  id        String       @id @default(cuid())
+  name      String
+  slug      String       @unique
+  members   TeamMember[]
+  profiles  Profile[]
+  products  NfcProduct[]
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+model TeamMember {
+  id        String   @id @default(cuid())
+  userId    String
+  teamId    String
+  role      UserRole @default(USER)
+  user      User     @relation(fields: [userId], references: [id])
+  team      Team     @relation(fields: [teamId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([userId, teamId])
+}
+
+model Profile {
+  id              String           @id @default(cuid())
+  userId          String
+  teamId          String?
+  name            String
+  slug            String           @unique
+  title           String?
+  company         String?
+  bio             String?
+  location        String?
+  website         String?
+  avatarUrl       String?
+  coverUrl        String?
+  logoUrl         String?
+  accent          String           @default("#6fffe9")
+  secondaryAccent String           @default("#f8c66d")
+  theme           ThemeMode        @default(MIDNIGHT)
+  layout          ProfileLayout    @default(HALO)
+  bgStyle         String           @default("gradient")
+  bgConfig        String           @default("{}")
+  directRedirectUrl String?
+  published       Boolean          @default(true)
+  user            User             @relation(fields: [userId], references: [id])
+  team            Team?            @relation(fields: [teamId], references: [id])
+  emails          ProfileEmail[]
+  phones          ProfilePhone[]
+  links           SocialLink[]
+  ctas            CtaButton[]
+  sections        ProfileSection[]
+  qrCodes         QrCode[]
+  signatures      EmailSignature[]
+  nfcProducts     NfcProduct[]
+  events          AnalyticsEvent[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([userId])
+  @@index([teamId])
+  @@index([published, slug])
+}
+
+model ProfileEmail {
+  id        String  @id @default(cuid())
+  profileId String
+  value     String
+  label     String?
+  primary   Boolean @default(false)
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model ProfilePhone {
+  id        String  @id @default(cuid())
+  profileId String
+  value     String
+  label     String?
+  primary   Boolean @default(false)
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model SocialLink {
+  id        String   @id @default(cuid())
+  profileId String
+  platform  String
+  label     String
+  url       String
+  enabled   Boolean  @default(true)
+  position  Int      @default(0)
+  clicks    Int      @default(0)
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  events    AnalyticsEvent[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CtaButton {
+  id        String  @id @default(cuid())
+  profileId String
+  label     String
+  href      String
+  style     String  @default("primary")
+  position  Int     @default(0)
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model ProfileSection {
+  id        String  @id @default(cuid())
+  profileId String
+  type      String
+  title     String?
+  content   Json
+  position  Int     @default(0)
+  visible   Boolean @default(true)
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model NfcProduct {
+  id            String    @id @default(cuid())
+  teamId        String?
+  profileId     String?
+  productSku    String
+  chipUid       String?   @unique
+  active        Boolean   @default(true)
+  programmedUrl String?
+  assignedAt    DateTime?
+  team          Team?     @relation(fields: [teamId], references: [id])
+  profile       Profile?  @relation(fields: [profileId], references: [id])
+  orderItems    OrderItem[]
+  events        AnalyticsEvent[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model QrCode {
+  id        String   @id @default(cuid())
+  profileId String
+  url       String
+  accent    String
+  branded   Boolean  @default(true)
+  active    Boolean  @default(true)
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  events    AnalyticsEvent[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model EmailSignature {
+  id        String   @id @default(cuid())
+  profileId String
+  name      String
+  html      String
+  includeQr Boolean  @default(true)
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Product {
+  id          String      @id @default(cuid())
+  sku         String      @unique
+  name        String
+  type        ProductType
+  description String?
+  price       Int
+  currency    String      @default("INR")
+  inventory   Int         @default(0)
+  active      Boolean     @default(true)
+  finishes    Json
+  images      Json
+  orderItems  OrderItem[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Order {
+  id          String      @id @default(cuid())
+  userId      String
+  status      OrderStatus @default(DRAFT)
+  total       Int
+  currency    String      @default("INR")
+  provider    String?
+  providerRef String?
+  couponId    String?
+  addressId   String?
+  user        User        @relation(fields: [userId], references: [id])
+  coupon      Coupon?     @relation(fields: [couponId], references: [id])
+  address     Address?    @relation(fields: [addressId], references: [id])
+  items       OrderItem[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model OrderItem {
+  id             String      @id @default(cuid())
+  orderId        String
+  productId      String
+  nfcProductId   String?
+  quantity       Int         @default(1)
+  unitPrice      Int
+  personalization Json
+  order          Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product        Product     @relation(fields: [productId], references: [id])
+  nfcProduct     NfcProduct? @relation(fields: [nfcProductId], references: [id])
+}
+
+model Address {
+  id        String   @id @default(cuid())
+  userId    String
+  name      String
+  line1     String
+  line2     String?
+  city      String
+  state     String
+  postal    String
+  country   String
+  phone     String?
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orders    Order[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Coupon {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  percentOff  Int?
+  amountOff   Int?
+  active      Boolean  @default(true)
+  expiresAt   DateTime?
+  orders      Order[]
+  createdAt   DateTime @default(now())
+}
+
+model AnalyticsEvent {
+  id          String             @id @default(cuid())
+  profileId   String
+  type        AnalyticsEventType
+  linkId      String?
+  qrCodeId    String?
+  nfcProductId String?
+  device      String?
+  browser     String?
+  os          String?
+  country     String?
+  city        String?
+  metadata    Json?
+  profile     Profile            @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  link        SocialLink?         @relation(fields: [linkId], references: [id])
+  qrCode      QrCode?             @relation(fields: [qrCodeId], references: [id])
+  nfcProduct  NfcProduct?         @relation(fields: [nfcProductId], references: [id])
+  createdAt   DateTime            @default(now())
+
+  @@index([profileId, type, createdAt])
+}
+
+model AdminAuditLog {
+  id        String   @id @default(cuid())
+  actorId   String
+  action    String
+  entity    String
+  entityId  String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+}

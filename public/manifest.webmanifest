@@ -1,0 +1,17 @@
+{
+  "name": "tapyfi Identity OS",
+  "short_name": "tapyfi",
+  "description": "NFC-powered digital identity, profile, QR, signature, analytics, and commerce platform.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050608",
+  "theme_color": "#050608",
+  "icons": [
+    {
+      "src": "/assets/tapyfi-mark.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

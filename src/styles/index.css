@@ -1,0 +1,268 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  font-family: "Plus Jakarta Sans", "Outfit", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #050608;
+  color: #edf4f7;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: -0.01em;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+  background:
+    linear-gradient(180deg, rgba(5, 6, 8, 0.8), rgba(5, 6, 8, 1)),
+    #050608;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+::selection {
+  color: #050608;
+  background: #6fffe9;
+}
+
+.liquid-glass {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04)),
+    rgba(10, 12, 16, 0.7);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 24px 80px rgba(0, 0, 0, 0.34);
+  backdrop-filter: blur(24px) saturate(1.25);
+}
+
+.surface-line {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.noise {
+  position: relative;
+}
+
+.noise::after {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  opacity: 0.08;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.45'/%3E%3C/svg%3E");
+  mix-blend-mode: screen;
+}
+
+.app-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 54px 54px;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), transparent);
+}
+
+.premium-focus:focus-visible {
+  outline: 2px solid #6fffe9;
+  outline-offset: 3px;
+}
+
+.scrollbar-soft {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.24) transparent;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.phone-shell {
+  border-radius: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.02)),
+    #090b0e;
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.44);
+}
+
+.card-preview {
+  transform-style: preserve-3d;
+  perspective: 1200px;
+}
+
+.font-display {
+  font-family: "Instrument Serif", Georgia, serif;
+}
+
+/* Premium Redesign Helper Classes */
+.text-gradient-purple {
+  background: linear-gradient(135deg, #a78bfa 0%, #6fffe9 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.glowing-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.glow-card-hover {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(10, 12, 16, 0.45);
+}
+
+.glow-card-hover:hover {
+  transform: translateY(-5px);
+  border-color: rgba(111, 255, 229, 0.4);
+  background: rgba(10, 12, 16, 0.65);
+  box-shadow: 0 15px 40px rgba(111, 255, 229, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.neon-frame {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  border: none;
+  box-shadow: 
+    inset 0 0 35px rgba(111, 255, 229, 0.2),
+    inset 0 0 15px rgba(167, 139, 250, 0.15),
+    0 0 35px rgba(111, 255, 229, 0.2),
+    0 0 15px rgba(167, 139, 250, 0.15);
+  animation: neon-pulse 4s ease-in-out infinite;
+}
+
+@keyframes neon-pulse {
+  0%, 100% {
+    box-shadow: 
+      inset 0 0 50px rgba(111, 255, 229, 0.45),
+      inset 0 0 25px rgba(167, 139, 250, 0.35),
+      0 0 50px rgba(111, 255, 229, 0.45),
+      0 0 25px rgba(167, 139, 250, 0.35);
+  }
+  50% {
+    box-shadow: 
+      inset 0 0 20px rgba(111, 255, 229, 0.12),
+      inset 0 0 10px rgba(167, 139, 250, 0.08),
+      0 0 20px rgba(111, 255, 229, 0.12),
+      0 0 10px rgba(167, 139, 250, 0.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Subtle Premium Animated Backgrounds */
+
+.bg-anim-gradient {
+  background: linear-gradient(135deg, #050608, #130a21, #040b17, #0f0516);
+  background-size: 400% 400%;
+  animation: bg-gradient-animation calc(15s / var(--bg-speed-mult, 1)) ease infinite;
+}
+@keyframes bg-gradient-animation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.bg-anim-iridescence {
+  background: radial-gradient(circle at calc(10% + var(--mouse-offset-x, 0%)) calc(20% + var(--mouse-offset-y, 0%)), rgba(calc(111 * var(--bg-r-mult, 1)), calc(255 * var(--bg-g-mult, 1)), calc(233 * var(--bg-b-mult, 1)), calc(var(--bg-intensity, 1) * 0.12)), transparent 45%),
+              radial-gradient(circle at calc(90% - var(--mouse-offset-x, 0%)) calc(80% - var(--mouse-offset-y, 0%)), rgba(calc(248 * var(--bg-r-mult, 1)), calc(198 * var(--bg-g-mult, 1)), calc(109 * var(--bg-b-mult, 1)), calc(var(--bg-intensity, 1) * 0.12)), transparent 45%),
+              radial-gradient(circle at calc(50% + var(--mouse-offset-x, 0%) * 0.5) calc(50% + var(--mouse-offset-y, 0%) * 0.5), rgba(calc(225 * var(--bg-r-mult, 1)), calc(48 * var(--bg-g-mult, 1)), calc(108 * var(--bg-b-mult, 1)), calc(var(--bg-intensity, 1) * 0.10)), transparent 50%),
+              radial-gradient(circle at calc(20% - var(--mouse-offset-x, 0%) * 1.5) calc(80% + var(--mouse-offset-y, 0%) * 1.5), rgba(calc(145 * var(--bg-r-mult, 1)), calc(70 * var(--bg-g-mult, 1)), calc(255 * var(--bg-b-mult, 1)), calc(var(--bg-intensity, 1) * 0.12)), transparent 45%),
+              #050608;
+  background-size: 200% 200%;
+  animation: bg-iridescence-animation calc(18s / var(--bg-speed-mult, 1)) ease-in-out infinite alternate;
+}
+@keyframes bg-iridescence-animation {
+  0% { background-position: 0% 0%; }
+  50% { background-position: 100% 100%; }
+  100% { background-position: 0% 100%; }
+}
+
+.bg-anim-silk {
+  background: linear-gradient(60deg, #05070a, #0e121a, #070a10, #0f0b14);
+  background-size: 300% 300%;
+  animation: bg-silk-animation calc(16s / var(--bg-speed-mult, 1)) ease-in-out infinite alternate;
+}
+@keyframes bg-silk-animation {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+.bg-anim-squares {
+  background: #050608;
+  background-image: 
+    linear-gradient(rgba(111, 255, 233, calc(var(--bg-intensity, 1) * 0.02)) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(111, 255, 233, calc(var(--bg-intensity, 1) * 0.02)) 1px, transparent 1px);
+  background-size: 45px 45px;
+  position: relative;
+}
+.bg-anim-squares::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at calc(50% + var(--mouse-offset-x, 0%)) calc(50% + var(--mouse-offset-y, 0%)), rgba(calc(111 * var(--bg-r-mult, 1)), calc(255 * var(--bg-g-mult, 1)), calc(233 * var(--bg-b-mult, 1)), calc(var(--bg-intensity, 1) * 0.04)) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.bg-anim-hyperspeed {
+  background: #040507;
+  position: relative;
+  overflow: hidden;
+}
+.bg-anim-hyperspeed::before {
+  content: "";
+  position: absolute;
+  inset: -100%;
+  background-image: 
+    radial-gradient(ellipse at center, rgba(111, 255, 233, calc(var(--bg-intensity, 1) * 0.03)) 1px, transparent 2px),
+    radial-gradient(ellipse at calc(30% + var(--mouse-offset-x, 0%)) calc(30% + var(--mouse-offset-y, 0%)), rgba(248, 198, 109, calc(var(--bg-intensity, 1) * 0.02)) 1px, transparent 2px);
+  background-size: 140px 140px, 90px 90px;
+  transform: rotate(12deg);
+  animation: hyperspeed-move calc(40s / var(--bg-speed-mult, 1)) linear infinite;
+  pointer-events: none;
+}
+@keyframes hyperspeed-move {
+  0% { transform: translateY(0) rotate(12deg); }
+  100% { transform: translateY(140px) rotate(12deg); }
+}
+
