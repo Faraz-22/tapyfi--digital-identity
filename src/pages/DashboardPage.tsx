@@ -780,6 +780,18 @@ function NfcQrPanel({ profile, setProfile }: { profile: Profile; setProfile: Dis
   const vanityUrl = getProfileUrl(profile.slug);
   const hasRedirect = Boolean(profile.directRedirectUrl);
 
+  const [copied, setCopied] = useState(false);
+  const handleCopyUrl = (url: string) => {
+    navigator.clipboard.writeText(url)
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      })
+      .catch((err) => {
+        console.error("Failed to copy URL:", err);
+      });
+  };
+
   const [cards, setCards] = useState<NfcProduct[]>([]);
   const [loadingCards, setLoadingCards] = useState(true);
   const [newTagId, setNewTagId] = useState("");
