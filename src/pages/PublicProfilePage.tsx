@@ -200,8 +200,26 @@ export function PublicProfilePage() {
           </div>
         </div>
 
+        {/* Cover Image Banner */}
+        {profile.cover && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="relative w-full mb-8 rounded-2xl overflow-hidden"
+            style={{ aspectRatio: "3.5 / 1" }}
+          >
+            <img
+              src={profile.cover}
+              alt="Cover"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+          </motion.div>
+        )}
+
         {/* Dynamic Card Container - Bento/Grid on desktop, centered list on mobile */}
-        <div className="grid grid-cols-1 md:grid-cols-[1fr_1.1fr] gap-8 md:gap-12 items-start">
+        <div className={`grid grid-cols-1 md:grid-cols-[1fr_1.1fr] gap-8 md:gap-12 items-start ${profile.cover ? '-mt-20 relative z-10' : ''}`}>
           
           {/* LEFT COLUMN: Profile Header details */}
           <div className="flex flex-col items-center md:items-start text-center md:text-left w-full">
