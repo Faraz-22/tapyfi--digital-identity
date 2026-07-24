@@ -8,6 +8,7 @@ import { MagneticButton } from "./MagneticButton";
 
 export function QRCard({ profile }: { profile: Profile }) {
   const [qr, setQr] = useState("");
+  const [copied, setCopied] = useState(false);
   const profileUrl = getStableProfileUrl(profile);
   const vanityUrl = getProfileUrl(profile.slug);
 
@@ -29,6 +30,17 @@ export function QRCard({ profile }: { profile: Profile }) {
     link.click();
   }
 
+  function handleCopy() {
+    navigator.clipboard.writeText(profileUrl)
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      })
+      .catch((err) => {
+        console.error("Failed to copy QR URL:", err);
+      });
+  }
+
   return (
     <GlassCard className="p-5">
       <div className="flex flex-col gap-5 md:flex-row md:items-center">
@@ -45,9 +57,9 @@ export function QRCard({ profile }: { profile: Profile }) {
               <Download size={16} />
               PNG
             </MagneticButton>
-            <MagneticButton variant="ghost" onClick={() => navigator.clipboard.writeText(profileUrl)}>
+            <MagneticButton variant="ghost" onClick={handleCopy}>
               <RefreshCcw size={16} />
-              Copy URL
+              {copied ? "Copied!" : "Copy URL"}
             </MagneticButton>
           </div>
         </div>

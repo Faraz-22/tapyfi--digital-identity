@@ -100,6 +100,18 @@ export function DashboardPage() {
     return profile ? getProfileUrl(profile.slug) : "";
   }, [profile?.slug]);
 
+  const [copied, setCopied] = useState(false);
+  const handleCopyUrl = useCallback((url: string) => {
+    navigator.clipboard.writeText(url)
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      })
+      .catch((err) => {
+        console.error("Failed to copy URL:", err);
+      });
+  }, []);
+
   // 1. Fetch live profile data from backend on mount (checking auth)
   useEffect(() => {
     const token = localStorage.getItem("tapyfi.auth.token");
@@ -298,8 +310,8 @@ export function DashboardPage() {
                 <MagneticButton variant="secondary" className="min-h-9 px-3 py-2 text-xs" to={`/profile/${profile.slug}`}>
                   Open
                 </MagneticButton>
-                <MagneticButton variant="ghost" className="min-h-9 px-3 py-2 text-xs" onClick={() => navigator.clipboard.writeText(profileUrl)}>
-                  Copy
+                <MagneticButton variant="ghost" className="min-h-9 px-3 py-2 text-xs" onClick={() => handleCopyUrl(profileUrl)}>
+                  {copied ? "Copied!" : "Copy"}
                 </MagneticButton>
               </div>
             </GlassCard>
@@ -877,9 +889,9 @@ function NfcQrPanel({ profile, setProfile }: { profile: Profile; setProfile: Dis
                 <Wifi size={16} />
                 Write to NFC
               </MagneticButton>
-              <MagneticButton variant="secondary" onClick={() => navigator.clipboard.writeText(profileUrl)}>
+              <MagneticButton variant="secondary" onClick={() => handleCopyUrl(profileUrl)}>
                 <Share2 size={16} />
-                Copy NFC URL
+                {copied ? "Copied!" : "Copy NFC URL"}
               </MagneticButton>
             </div>
             <p className="mt-3 break-all text-xs text-white/38">Vanity URL remains available: {vanityUrl}</p>
