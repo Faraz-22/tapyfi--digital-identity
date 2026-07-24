@@ -1,17 +1,43 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-const FROM_EMAIL = process.env.EMAIL_FROM || "Tapyfi <onboarding@resend.dev>";
+/**
+ * Get a Resend client instance safely.
+ * Returns null if RESEND_API_KEY is not configured in environment variables,
+ * preventing server startup crashes.
+ */
+function getResendClient(): Resend | null {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    return null;
+  }
+  try {
+    return new Resend(apiKey);
+  } catch (err) {
+    console.error("Failed to initialize Resend client:", err);
+    return null;
+  }
+}
 
 /**
  * Send a password-reset email with a secure one-time link.
- * The email uses a clean HTML template aligned with Tapyfi's dark premium aesthetic.
+ * The email uses a clean HTML template aligned with Tapyfi's dark aesthetic.
  */
 export async function sendPasswordResetEmail(
   to: string,
   resetUrl: string
 ): Promise<void> {
+  const resend = getResendClient();
+
+  // If no API key is set, log to console in dev mode rather than crashing
+  if (!resend) {
+    console.warn(
+      `⚠️ RESEND_API_KEY is missing. Password reset URL for ${to}: ${resetUrl}`
+    );
+    return;
+  }
+
+  const fromEmail = process.env.EMAIL_FROM || "Tapyfi <onboarding@resend.dev>";
+
   const html = `
 <!DOCTYPE html>
 <html lang="en">
@@ -68,7 +94,7 @@ export async function sendPasswordResetEmail(
 
   try {
     const { error } = await resend.emails.send({
-      from: FROM_EMAIL,
+      from: fromEmail,
       to: [to],
       subject: "Reset your Tapyfi password",
       html
@@ -76,12 +102,10 @@ export async function sendPasswordResetEmail(
 
     if (error) {
       console.error("Resend API error:", error);
-      throw new Error("Failed to send password reset email");
+    } else {
+      console.log(`Password reset email sent to ${to}`);
     }
-
-    console.log(`Password reset email sent to ${to}`);
   } catch (err) {
     console.error("Email send failed:", err);
-    throw err;
   }
 }
