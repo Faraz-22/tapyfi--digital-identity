@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { ArrowRight, Loader2, ShieldCheck, UserPlus, LogIn } from "lucide-react";
+import { ArrowRight, Loader2, ShieldCheck, UserPlus, LogIn, KeyRound, ArrowLeft, CheckCircle2, Mail } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { GlassCard } from "../components/GlassCard";
-import { loginUser, registerUser, loginWithGoogle } from "../lib/api";
+import { loginUser, registerUser, loginWithGoogle, requestPasswordReset } from "../lib/api";
 
 declare global {
   interface Window {
@@ -18,6 +18,11 @@ export function AuthPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotLoading, setForgotLoading] = useState(false);
+  const [forgotSent, setForgotSent] = useState(false);
+  const [forgotError, setForgotError] = useState<string | null>(null);
 
   useEffect(() => {
     const id = "google-gsi-client";
@@ -109,6 +114,24 @@ export function AuthPage() {
     }
   }
 
+  async function handleForgotPassword(e: React.FormEvent) {
+    e.preventDefault();
+    if (!forgotEmail) {
+      setForgotError("Please enter your email address.");
+      return;
+    }
+    setForgotLoading(true);
+    setForgotError(null);
+    try {
+      await requestPasswordReset(forgotEmail);
+      setForgotSent(true);
+    } catch (err: any) {
+      setForgotError(err.message || "Something went wrong. Please try again.");
+    } finally {
+      setForgotLoading(false);
+    }
+  }
+
   return (
     <main className="noise grid min-h-screen place-items-center bg-ink px-4 py-10 text-white">
       <div className="w-full max-w-5xl">
@@ -135,7 +158,7 @@ export function AuthPage() {
             </div>
           </GlassCard>
 
-          <GlassCard className="p-7 flex flex-col justify-between">
+          <GlassCard className="p-7 flex flex-col justify-between relative overflow-hidden">
             <div>
               {/* Tab Selector */}
               <div className="grid grid-cols-2 gap-2 p-1.5 rounded-[12px] bg-white/[0.04] border border-white/5 mb-6">
@@ -203,6 +226,25 @@ export function AuthPage() {
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </label>
+
+                {/* Forgot password link — only on Sign In */}
+                {!isSignUp && (
+                  <div className="flex justify-end -mt-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowForgotPassword(true);
+                        setForgotEmail(email || "");
+                        setForgotSent(false);
+                        setForgotError(null);
+                      }}
+                      className="text-xs text-signal/80 hover:text-signal transition font-medium"
+                    >
+                      Forgot password?
+                    </button>
+                  </div>
+                )}
+
                 {error && (
                   <p className="text-sm font-semibold text-pulse leading-snug">{error}</p>
                 )}
@@ -235,6 +277,94 @@ export function AuthPage() {
                 <div id="google-signin-btn" className="w-full flex justify-center bg-transparent rounded-full min-h-[40px] px-2 py-0.5" />
               </div>
             </div>
+
+            {/* Forgot Password Overlay */}
+            {showForgotPassword && (
+              <div className="absolute inset-0 z-10 flex flex-col justify-center rounded-[inherit] bg-[#13181f]/[0.97] backdrop-blur-xl p-7 animate-fade-in">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowForgotPassword(false);
+                    setForgotSent(false);
+                    setForgotError(null);
+                  }}
+                  className="absolute top-5 left-5 p-2 rounded-full hover:bg-white/5 transition text-white/50 hover:text-white"
+                >
+                  <ArrowLeft size={18} />
+                </button>
+
+                {forgotSent ? (
+                  <div className="text-center px-4">
+                    <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-signal/10 border border-signal/20">
+                      <CheckCircle2 size={28} className="text-signal" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-white mb-2">Check your email</h3>
+                    <p className="text-sm text-white/55 leading-relaxed max-w-[320px] mx-auto">
+                      If an account with <span className="text-white/80 font-medium">{forgotEmail}</span> exists, we've sent a password reset link. It expires in 1 hour.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowForgotPassword(false);
+                        setForgotSent(false);
+                      }}
+                      className="mt-6 text-sm text-signal/80 hover:text-signal font-medium transition"
+                    >
+                      ← Back to Sign In
+                    </button>
+                  </div>
+                ) : (
+                  <div className="px-1">
+                    <div className="flex items-center gap-3 mb-1">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-signal/10 border border-signal/20">
+                        <KeyRound size={18} className="text-signal" />
+                      </div>
+                    </div>
+                    <h3 className="text-xl font-semibold text-white mt-4 mb-1">Reset your password</h3>
+                    <p className="text-sm text-white/50 mb-6 leading-relaxed">
+                      Enter the email address associated with your account and we'll send you a link to reset your password.
+                    </p>
+                    <form onSubmit={handleForgotPassword} className="grid gap-4">
+                      <label className="grid gap-2 text-sm text-white/72">
+                        Email address
+                        <div className="relative">
+                          <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" />
+                          <input
+                            type="email"
+                            required
+                            placeholder="name@company.com"
+                            className="premium-focus w-full rounded-[8px] border border-white/10 bg-white/[0.06] pl-11 pr-4 py-3 text-white placeholder:text-white/30"
+                            value={forgotEmail}
+                            onChange={(e) => setForgotEmail(e.target.value)}
+                            autoFocus
+                          />
+                        </div>
+                      </label>
+                      {forgotError && (
+                        <p className="text-sm font-semibold text-pulse leading-snug">{forgotError}</p>
+                      )}
+                      <button
+                        type="submit"
+                        disabled={forgotLoading}
+                        className="premium-focus inline-flex min-h-[46px] items-center justify-center gap-2 rounded-full bg-signal px-6 text-sm font-bold text-ink transition hover:brightness-110 disabled:opacity-50"
+                      >
+                        {forgotLoading ? (
+                          <>
+                            <Loader2 size={16} className="animate-spin" />
+                            Sending...
+                          </>
+                        ) : (
+                          <>
+                            Send Reset Link
+                            <ArrowRight size={16} />
+                          </>
+                        )}
+                      </button>
+                    </form>
+                  </div>
+                )}
+              </div>
+            )}
 
           </GlassCard>
         </div>

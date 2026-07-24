@@ -6,6 +6,7 @@ import { DashboardPage } from "./pages/DashboardPage";
 import { LandingPage } from "./pages/LandingPage";
 import { MarketplacePage } from "./pages/MarketplacePage";
 import { PublicProfilePage } from "./pages/PublicProfilePage";
+import { ResetPasswordPage } from "./pages/ResetPasswordPage";
 
 export default function App() {
   const location = useLocation();
@@ -22,6 +23,7 @@ export default function App() {
         <Routes location={location}>
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<AuthPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/p/:profileId" element={<PublicProfilePage />} />
           <Route path="/profile/:slug" element={<PublicProfilePage />} />

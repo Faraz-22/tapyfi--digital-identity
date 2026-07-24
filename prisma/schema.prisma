@@ -56,17 +56,31 @@ enum ProductType {
 }
 
 model User {
-  id           String       @id @default(cuid())
-  email        String       @unique
-  passwordHash String?
-  name         String
-  role         UserRole     @default(USER)
-  profiles     Profile[]
-  teamMembers  TeamMember[]
-  orders       Order[]
-  addresses    Address[]
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  id                  String               @id @default(cuid())
+  email               String               @unique
+  passwordHash        String?
+  name                String
+  role                UserRole             @default(USER)
+  profiles            Profile[]
+  teamMembers         TeamMember[]
+  orders              Order[]
+  addresses           Address[]
+  passwordResetTokens PasswordResetToken[]
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+}
+
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  token     String    @unique
+  userId    String
+  expiresAt DateTime
+  usedAt    DateTime?
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+
+  @@index([token])
+  @@index([userId])
 }
 
 model Team {
