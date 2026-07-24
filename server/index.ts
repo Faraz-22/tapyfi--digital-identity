@@ -66,10 +66,18 @@ const allowedOrigins = [
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin) || origin.startsWith("http://localhost:") || origin.startsWith("http://127.0.0.1:")) {
+    
+    // Normalize origins to remove trailing slashes
+    const normalizedOrigin = origin.replace(/\/$/, "");
+    const isAllowed = allowedOrigins.some(o => o.replace(/\/$/, "") === normalizedOrigin) ||
+      normalizedOrigin.endsWith(".vercel.app") ||
+      normalizedOrigin.startsWith("http://localhost:") ||
+      normalizedOrigin.startsWith("http://127.0.0.1:");
+
+    if (isAllowed) {
       return callback(null, true);
     }
-    callback(new Error("Not allowed by CORS"));
+    callback(new Error(`Not allowed by CORS: ${origin}`));
   },
   credentials: true
 }));
