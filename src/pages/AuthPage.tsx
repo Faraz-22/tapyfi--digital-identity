@@ -14,8 +14,8 @@ export function AuthPage() {
   const navigate = useNavigate();
   const [isSignUp, setIsSignUp] = useState(false);
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("faraz@tapyfi.com");
-  const [password, setPassword] = useState("password123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -235,11 +235,7 @@ export function AuthPage() {
                 <div id="google-signin-btn" className="w-full flex justify-center bg-transparent rounded-full min-h-[40px] px-2 py-0.5" />
               </div>
             </div>
-            {!isSignUp && (
-              <p className="text-center text-[11px] text-white/35 mt-6 leading-relaxed border-t border-white/5 pt-4">
-                Seed user: <span className="font-mono text-white/60">faraz@tapyfi.com</span> / <span className="font-mono text-white/60">password123</span>
-              </p>
-            )}
+
           </GlassCard>
         </div>
       </div>
