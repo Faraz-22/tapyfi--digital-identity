@@ -1172,8 +1172,8 @@ function ImageUploadField({
           const ctx = canvas.getContext("2d");
           ctx?.drawImage(img, 0, 0, width, height);
 
-          // Compress aggressively to webp to easily fit inside JSON payloads (<150KB typically)
-          const dataUrl = canvas.toDataURL("image/webp", 0.7);
+          // Compress aggressively to jpeg to ensure iOS Safari respects the 0.7 quality setting and avoids massive PNG fallbacks
+          const dataUrl = canvas.toDataURL("image/jpeg", 0.7);
           onChange(dataUrl);
           setLoading(false);
         };

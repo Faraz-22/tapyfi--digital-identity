@@ -216,7 +216,7 @@ function SortableLinkRow({
       </div>
 
       {/* Middle: Input Fields */}
-      <div className="grid gap-3 sm:grid-cols-2 flex-1">
+      <div className="grid gap-3 flex-1 xl:grid-cols-2">
         <label className="grid gap-1.5 text-xs text-white/50">
           Link Label
           <input
