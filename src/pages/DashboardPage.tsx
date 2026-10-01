@@ -1145,20 +1145,54 @@ function ImageUploadField({
   const [dragging, setDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Directly upload the file to the backend API and store the clean HTTPS/HTTP URL
+  // Compress image on the client side to avoid backend PayloadTooLarge errors and guarantee fast persistence
   const handleFile = useCallback(async (file?: File) => {
     if (!file) return;
     try {
       setError("");
       setLoading(true);
-      const res = await uploadImage(file);
-      onChange(res.url);
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const MAX_WIDTH = wide ? 1400 : 400;
+          const scaleSize = MAX_WIDTH / img.width;
+          let width = img.width;
+          let height = img.height;
+
+          if (scaleSize < 1) {
+            width = MAX_WIDTH;
+            height = img.height * scaleSize;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx?.drawImage(img, 0, 0, width, height);
+
+          // Compress aggressively to webp to easily fit inside JSON payloads (<150KB typically)
+          const dataUrl = canvas.toDataURL("image/webp", 0.7);
+          onChange(dataUrl);
+          setLoading(false);
+        };
+        img.onerror = () => {
+          setError("Failed to read image data.");
+          setLoading(false);
+        };
+        img.src = e.target?.result as string;
+      };
+      reader.onerror = () => {
+        setError("Failed to read file.");
+        setLoading(false);
+      };
+      reader.readAsDataURL(file);
     } catch (uploadError: any) {
       setError(uploadError.message || "Unable to upload image.");
-    } finally {
       setLoading(false);
     }
-  }, [onChange]);
+  }, [onChange, wide]);
 
   function handleDrop(event: DragEvent<HTMLDivElement>) {
     event.preventDefault();
