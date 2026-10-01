@@ -187,7 +187,7 @@ function SortableLinkRow({
         opacity: isDragging ? 0.5 : 1,
         zIndex: isDragging ? 50 : 1
       }}
-      className={`group relative grid gap-4 rounded-xl border p-4 bg-white/[0.02] border-white/10 transition-all hover:bg-white/[0.04] hover:border-white/15 xl:grid-cols-[auto_1fr_auto] xl:items-center`}
+      className={`group relative flex flex-col 2xl:flex-row 2xl:items-center gap-4 rounded-xl border p-4 bg-white/[0.02] border-white/10 transition-all hover:bg-white/[0.04] hover:border-white/15`}
     >
       {/* Left: Drag Handle and Platform Identity */}
       <div className="flex items-center gap-3">
@@ -216,7 +216,7 @@ function SortableLinkRow({
       </div>
 
       {/* Middle: Input Fields */}
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid gap-3 sm:grid-cols-2 flex-1">
         <label className="grid gap-1.5 text-xs text-white/50">
           Link Label
           <input
@@ -261,7 +261,7 @@ function SortableLinkRow({
       </div>
 
       {/* Right: Controls (Switch, Clicks, Remove) */}
-      <div className="flex items-center justify-between gap-4 border-t border-white/5 pt-3 xl:border-t-0 xl:pt-0">
+      <div className="flex items-center justify-between gap-4 border-t border-white/5 pt-3 2xl:border-t-0 2xl:pt-0">
         {/* Click stats badge */}
         {link.clicks > 0 ? (
           <div className="rounded-full bg-white/[0.05] px-2.5 py-1 text-[10px] font-semibold text-white/70 border border-white/5" title="Total clicks tracked">

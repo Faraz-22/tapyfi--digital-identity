@@ -69,12 +69,22 @@ export function ProfilePreview({ profile, compact = false }: { profile: Profile;
   return (
     <div className="phone-shell mx-auto w-full max-w-[390px] p-2">
       <div className={`relative overflow-hidden rounded-[28px] ${bgClass} ${themeClass}`} style={dynamicBgStyles}>
-        <img src={profile.cover} alt="" className="h-36 w-full object-cover opacity-75" />
+        <img 
+          src={profile.cover || "https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=1400&q=80"} 
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=1400&q=80";
+          }}
+          alt="" 
+          className="h-36 w-full object-cover opacity-75" 
+        />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/70" />
         <div className="relative -mt-12 px-5 pb-5">
           <motion.img
             layout
-            src={profile.avatar}
+            src={profile.avatar || "https://images.unsplash.com/photo-1527980965255-d3b416303d12?auto=format&fit=crop&w=480&q=80"}
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1527980965255-d3b416303d12?auto=format&fit=crop&w=480&q=80";
+            }}
             alt={profile.name}
             className="h-24 w-24 rounded-[28px] border-4 border-black/30 object-cover shadow-glow"
             style={{ boxShadow: `0 0 38px ${profile.accent}33` }}
