@@ -26,16 +26,8 @@ if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
-// Multer disk storage setup
-const storage = multer.diskStorage({
-  destination: (_req, _file, cb) => {
-    cb(null, "uploads/");
-  },
-  filename: (_req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname));
-  }
-});
+// Multer memory storage setup to convert directly to base64
+const storage = multer.memoryStorage();
 
 const upload = multer({
   storage: storage,
@@ -81,7 +73,7 @@ app.use(cors({
   },
   credentials: true
 }));
-app.use(express.json({ limit: "2mb" }));
+app.use(express.json({ limit: "10mb" }));
 app.use(morgan("dev"));
 app.use(apiLimiter);
 
@@ -100,8 +92,9 @@ app.post("/api/upload", upload.single("image"), async (request, response) => {
     return response.status(400).json({ error: "No file uploaded" });
   }
   try {
-    const result = await StorageService.saveFile(request.file);
-    response.json({ url: result.url });
+    const base64 = request.file.buffer.toString("base64");
+    const dataUrl = `data:${request.file.mimetype};base64,${base64}`;
+    response.json({ url: dataUrl });
   } catch (error: any) {
     console.error("Storage upload failed:", error);
     response.status(500).json({ error: "File storage failed" });
