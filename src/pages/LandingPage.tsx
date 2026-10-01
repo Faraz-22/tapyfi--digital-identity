@@ -85,13 +85,13 @@ export function LandingPage() {
             </div>
             <span className="text-base font-bold uppercase tracking-wider text-white group-hover:text-signal transition duration-300">tapyfi</span>
           </a>
-          <div className="hidden items-center gap-8 rounded-full border border-white/5 bg-white/[0.03] px-6 py-3 text-sm text-white/70 backdrop-blur-xl md:flex shadow-2xl">
+          <div className="hidden items-center gap-8 rounded-full border border-white/5 bg-white/[0.03] px-6 py-3 text-sm text-white/70 backdrop-blur-xl lg:flex shadow-2xl">
             <a href="#platform" className="hover:text-signal transition">Platform</a>
             <a href="#nfc" className="hover:text-signal transition">NFC</a>
             <a href="#commerce" className="hover:text-signal transition">Marketplace</a>
             <a href="#architecture" className="hover:text-signal transition">Architecture</a>
           </div>
-          <MagneticButton to="/login" variant="secondary" className="hidden md:inline-flex shadow-lg shadow-black/40">
+          <MagneticButton to="/login" variant="secondary" className="inline-flex text-xs md:text-sm px-4 py-2 md:px-5 md:py-2.5 shadow-lg shadow-black/40">
             Sign in
           </MagneticButton>
         </nav>
@@ -116,7 +116,7 @@ export function LandingPage() {
               initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.6 }}
-              className="font-display text-[clamp(4.5rem,15vw,11.5rem)] leading-[0.82] tracking-tight text-white"
+              className="font-display text-[clamp(3.2rem,12vw,9.5rem)] leading-[0.85] tracking-tight text-white"
             >
               The presence<br/>
               <span className="text-white/40">layer for</span> founders.
@@ -148,7 +148,7 @@ export function LandingPage() {
           </div>
 
           {/* Lower Stats Row */}
-          <div className="mt-20 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 border-t border-white/10 pt-8">
+          <div className="mt-16 md:mt-24 grid gap-3 grid-cols-2 lg:grid-cols-4 border-t border-white/10 pt-8">
             {[
               ["Visual Identity", "Instant Cloud Sync", "accent"],
               ["NFC card support", "Type 2 & 4 Programable", "secondaryAccent"],
@@ -174,11 +174,11 @@ export function LandingPage() {
       </section>
 
       {/* Modules Grid Section */}
-      <section id="platform" className="relative border-y border-white/10 bg-[#080a0d]/60 px-6 py-24 md:px-8">
+      <section id="platform" className="relative border-y border-white/10 bg-[#080a0d]/60 px-5 py-16 md:px-8 md:py-24">
         <div className="mx-auto max-w-7xl z-10 relative">
           <div className="max-w-3xl mb-16">
             <p className="text-xs uppercase tracking-widest text-signal font-extrabold">Unified Presence Layer</p>
-            <h2 className="mt-4 text-4xl font-extrabold tracking-tight text-white md:text-6xl">
+            <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-white md:text-5xl lg:text-6xl leading-[1.1]">
               Not a business card.<br/>
               A <span className="font-display italic text-gradient-purple">live identity operating system</span>.
             </h2>
@@ -216,8 +216,8 @@ export function LandingPage() {
       </section>
 
       {/* NFC Workflow Section */}
-      <section id="nfc" className="px-6 py-24 md:px-8 relative">
-        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.9fr_1fr] lg:items-center">
+      <section id="nfc" className="px-5 py-16 md:px-8 md:py-24 relative">
+        <div className="mx-auto grid max-w-7xl gap-10 lg:gap-16 lg:grid-cols-[0.9fr_1fr] lg:items-center">
           <div>
             <p className="text-xs uppercase tracking-widest text-signal font-extrabold">NFC-First Infrastructure</p>
             <h2 className="mt-4 text-4xl font-extrabold tracking-tight md:text-6xl leading-[1.1]">
@@ -252,9 +252,9 @@ export function LandingPage() {
       </section>
 
       {/* Luxury Commerce Marketplace */}
-      <section id="commerce" className="bg-[#0b0907]/60 border-t border-white/5 px-6 py-24 md:px-8">
+      <section id="commerce" className="bg-[#0b0907]/60 border-t border-white/5 px-5 py-16 md:px-8 md:py-24">
         <div className="mx-auto max-w-7xl">
-          <div className="grid gap-8 lg:grid-cols-[1fr_0.9fr] lg:items-end mb-16">
+          <div className="grid gap-6 lg:gap-12 lg:grid-cols-[1fr_0.9fr] lg:items-end mb-12 md:mb-16">
             <div>
               <p className="text-xs uppercase tracking-widest text-signal font-extrabold">Custom Identity Products</p>
               <h2 className="mt-4 text-4xl font-extrabold tracking-tight md:text-6xl">
@@ -267,7 +267,7 @@ export function LandingPage() {
             </p>
           </div>
           
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {[
               { name: "Matte Obsidian Card", gradient: "from-black via-zinc-800 to-zinc-950", price: "₹1,999", border: "border-white/10" },
               { name: "Titanium Executive Card", gradient: "from-zinc-900 via-zinc-700 to-zinc-950", price: "₹3,499", border: "border-signal/20" },
@@ -299,7 +299,7 @@ export function LandingPage() {
       </section>
 
       {/* Blueprint Architecture Section */}
-      <section id="architecture" className="px-6 py-24 md:px-8">
+      <section id="architecture" className="px-5 py-16 md:px-8 md:py-24">
         <div className="mx-auto max-w-7xl">
           <GlassCard className="p-8 md:p-12 border border-white/5 relative overflow-hidden">
             <div className="glowing-orb bottom-[-20%] right-[-10%] w-[300px] h-[300px] bg-signal/10" />
