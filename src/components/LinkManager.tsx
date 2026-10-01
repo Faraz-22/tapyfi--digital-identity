@@ -230,15 +230,15 @@ function SortableLinkRow({
         
         <label className="grid gap-1.5 text-xs text-white/50">
           Username / URL
-          <div className="premium-focus flex w-full items-center overflow-hidden rounded-lg border border-white/10 bg-white/[0.04] transition hover:bg-white/[0.07] focus-within:bg-ink">
+          <div className="premium-focus flex w-full items-center overflow-hidden rounded-[8px] border border-white/15 bg-black/20 transition focus-within:border-signal/40 focus-within:bg-white/[0.02] focus-within:shadow-[0_0_0_1px_rgba(111,255,233,0.4)]">
             {brand.prefix && brand.prefix !== "https://" && (
-              <span className="select-none bg-white/[0.02] px-3 py-2 text-xs text-white/40 border-r border-white/5 hidden sm:block whitespace-nowrap">
+              <span className="select-none bg-white/[0.06] px-3 py-2 text-[11px] font-semibold text-white/50 border-r border-white/10 whitespace-nowrap h-full flex items-center tracking-wide">
                 {brand.prefix.replace("https://", "")}
               </span>
             )}
             <input
               aria-label="Link URL"
-              className="w-full bg-transparent px-3 py-2 text-sm text-white outline-none"
+              className="w-full bg-transparent px-3 py-2 text-sm text-white outline-none placeholder:text-white/25 font-medium"
               value={link.url}
               placeholder={brand.placeholder}
               onChange={(event) => onUpdate({ url: event.target.value })}
@@ -247,7 +247,7 @@ function SortableLinkRow({
               href={link.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="mr-1.5 shrink-0 rounded-md p-1.5 text-white/30 hover:text-signal hover:bg-white/5 transition"
+              className="mr-1.5 shrink-0 rounded-md p-1.5 text-white/30 hover:text-signal hover:bg-white/10 transition"
               title="Test link in new tab"
             >
               <ExternalLink size={14} />
