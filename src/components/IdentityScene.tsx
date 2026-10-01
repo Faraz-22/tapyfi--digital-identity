@@ -46,9 +46,13 @@ export function IdentityScene() {
       ctx.save();
       ctx.translate(cx, cy);
       ctx.rotate(Math.sin(tick * 0.002) * 0.045);
-      const cardW = Math.min(360, width * 0.32);
+      
+      const isMobile = width < 768;
+      // Ensure the card doesn't shrink too much on mobile so the text fits
+      const cardW = isMobile ? Math.min(320, width * 0.6) : Math.min(360, width * 0.32);
       const cardH = cardW * 0.58;
-      roundedRect(-cardW / 2, -cardH / 2, cardW, cardH, 22);
+      
+      roundedRect(-cardW / 2, -cardH / 2, cardW, cardH, cardW * 0.06);
       const gradient = ctx.createLinearGradient(-cardW / 2, -cardH / 2, cardW / 2, cardH / 2);
       gradient.addColorStop(0, "rgba(255,255,255,0.22)");
       gradient.addColorStop(0.36, "rgba(111,255,233,0.16)");
@@ -60,17 +64,24 @@ export function IdentityScene() {
       ctx.lineWidth = 1;
       ctx.stroke();
 
+      // Scale text and grid based on card size
+      const scaleFactor = cardW / 360;
+      
       ctx.fillStyle = "rgba(255,255,255,0.78)";
-      ctx.font = "600 18px Inter, sans-serif";
-      ctx.fillText("tapyfi", -cardW / 2 + 28, -cardH / 2 + 44);
-      ctx.font = "12px Inter, sans-serif";
+      ctx.font = `600 ${18 * scaleFactor}px Inter, sans-serif`;
+      ctx.fillText("tapyfi", -cardW / 2 + 28 * scaleFactor, -cardH / 2 + 44 * scaleFactor);
+      
+      ctx.font = `${12 * scaleFactor}px Inter, sans-serif`;
       ctx.fillStyle = "rgba(255,255,255,0.5)";
-      ctx.fillText("identity.link/live", -cardW / 2 + 28, -cardH / 2 + 68);
+      ctx.fillText("identity.link/live", -cardW / 2 + 28 * scaleFactor, -cardH / 2 + 68 * scaleFactor);
 
       for (let row = 0; row < 3; row += 1) {
         for (let col = 0; col < 3; col += 1) {
           ctx.fillStyle = (row + col) % 2 === 0 ? "rgba(5,6,8,0.86)" : "rgba(111,255,233,0.8)";
-          ctx.fillRect(cardW / 2 - 82 + col * 14, cardH / 2 - 74 + row * 14, 9, 9);
+          const dotSize = 9 * scaleFactor;
+          const startX = cardW / 2 - (82 * scaleFactor) + col * (14 * scaleFactor);
+          const startY = cardH / 2 - (74 * scaleFactor) + row * (14 * scaleFactor);
+          ctx.fillRect(startX, startY, dotSize, dotSize);
         }
       }
 
@@ -79,8 +90,11 @@ export function IdentityScene() {
 
     function draw() {
       frame += 1;
-      const cx = width * 0.58;
-      const cy = height * 0.48;
+      const isMobile = width < 768;
+      // On mobile, push the animation up so it doesn't overlap the text block at the bottom
+      const cx = isMobile ? width * 0.5 : width * 0.58;
+      const cy = isMobile ? height * 0.32 : height * 0.48;
+      
       ctx.clearRect(0, 0, width, height);
 
       const backdrop = ctx.createLinearGradient(0, 0, width, height);
@@ -104,8 +118,10 @@ export function IdentityScene() {
       const positions = nodes.map((node) => {
         const angle = node.angle + frame * node.speed;
         const rx = Math.min(width, height) * node.radius;
+        // Tighter orbit on mobile
+        const orbitMultiplier = isMobile ? 1.0 : 1.6;
         return {
-          x: cx + Math.cos(angle) * rx * 1.6,
+          x: cx + Math.cos(angle) * rx * orbitMultiplier,
           y: cy + Math.sin(angle) * rx,
           size: node.size
         };
@@ -135,7 +151,8 @@ export function IdentityScene() {
       ctx.lineWidth = 1;
       for (let i = 0; i < 4; i += 1) {
         ctx.beginPath();
-        ctx.arc(cx + 210, cy - 12, 32 + i * 28 + Math.sin(frame * 0.025 + i) * 4, -0.7, 0.7);
+        const scanRadius = (isMobile ? 24 : 32) + i * (isMobile ? 20 : 28) + Math.sin(frame * 0.025 + i) * 4;
+        ctx.arc(cx + (isMobile ? 0 : 210), cy - (isMobile ? 80 : 12), scanRadius, -0.7, 0.7);
         ctx.stroke();
       }
       ctx.restore();
