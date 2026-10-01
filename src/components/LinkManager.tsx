@@ -230,28 +230,24 @@ function SortableLinkRow({
         
         <label className="grid gap-1.5 text-xs text-white/50">
           Username / URL
-          <div className="relative flex items-center">
-            {/* Show dynamic prefix in input */}
+          <div className="premium-focus flex w-full items-center overflow-hidden rounded-lg border border-white/10 bg-white/[0.04] transition hover:bg-white/[0.07] focus-within:bg-ink">
             {brand.prefix && brand.prefix !== "https://" && (
-              <span className="pointer-events-none absolute left-3 text-xs text-white/30 truncate max-w-[140px] hidden sm:inline">
+              <span className="select-none bg-white/[0.02] px-3 py-2 text-xs text-white/40 border-r border-white/5 hidden sm:block whitespace-nowrap">
                 {brand.prefix.replace("https://", "")}
               </span>
             )}
             <input
               aria-label="Link URL"
-              className={`premium-focus w-full rounded-lg border border-white/10 bg-white/[0.04] py-2 pr-9 text-sm text-white transition hover:bg-white/[0.07] focus:bg-ink ${
-                brand.prefix && brand.prefix !== "https://" ? "sm:pl-[145px] pl-3" : "pl-3"
-              }`}
+              className="w-full bg-transparent px-3 py-2 text-sm text-white outline-none"
               value={link.url}
               placeholder={brand.placeholder}
               onChange={(event) => onUpdate({ url: event.target.value })}
             />
-            {/* Test Link Button */}
             <a
               href={link.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="absolute right-2.5 rounded-md p-1 text-white/30 hover:text-signal hover:bg-white/5 transition"
+              className="mr-1.5 shrink-0 rounded-md p-1.5 text-white/30 hover:text-signal hover:bg-white/5 transition"
               title="Test link in new tab"
             >
               <ExternalLink size={14} />
