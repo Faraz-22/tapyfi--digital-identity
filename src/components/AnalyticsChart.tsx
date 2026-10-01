@@ -34,10 +34,11 @@ export function AnalyticsChart({ data }: { data: AnalyticsDatum[] }) {
 }
 
 function Bar({ value, max, className }: { value: number; max: number; className: string }) {
+  const percentage = max > 0 ? (value / max) * 100 : 0;
   return (
     <div
       className={`min-h-3 w-full max-w-[12px] rounded-t-full ${className}`}
-      style={{ height: `${Math.max(10, (value / max) * 100)}%` }}
+      style={{ height: `${Math.max(10, percentage)}%` }}
       title={`${value}`}
     />
   );
